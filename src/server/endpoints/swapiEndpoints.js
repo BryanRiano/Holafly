@@ -1,10 +1,9 @@
 
+const factory = require('../../app/People/index')
 
-const _isWookieeFormat = (req) => {
-    if (req.query.format && req.query.format == 'wookiee') {
-        return true;
-    }
-    return false;
+const _isWookieeFormat = (req, res, next) => {
+    req.wookiee = (req.query.format && req.query.format == 'wookiee');
+    return next();
 }
 
 
@@ -15,12 +14,12 @@ const applySwapiEndpoints = (server, app) => {
         res.send(data);
     });
 
-    server.get('/hfswapi/getPeople/:id', async (req, res) => {
+    server.get('/hfswapi/getPeople/:id', _isWookieeFormat, async (req, res) => {
         const id = req.params.id;
         let data = {};
         data = await app.db.swPeople.findOne({ where: { id: id } });
         if (!data) {
-            data = await app.swapiFunctions.genericRequest(`https://swapi.dev/api/people/${id}`, 'GET', null, true);
+            data = await factory.peopleFactory(id, req.wookiee)
         }
         res.send(data);
     });
