@@ -4,6 +4,7 @@ const loggingMiddleware = (db) =>
         const headers = JSON.stringify(req.headers);
         const originalUrl = req.originalUrl;
         // Persist this info on DB
+        db.logging.create({ action: originalUrl, header: headers, ip });
         next();
     }
 
