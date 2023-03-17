@@ -19,7 +19,12 @@ const genericRequest = async (url, method, body, logging = false) => {
     return data;
 }
 
+const getRandomInteger = (max) => {
+    return Math.floor(Math.ceil(Math.random()*max));
+}
+
 module.exports = {
     getWeightOnPlanet,
-    genericRequest
+    genericRequest,
+    getRandomInteger
 }
